@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTools;
@@ -22,6 +24,7 @@ namespace ConsoleToolsTest
             
 
             Konsole.CrashOnEscapeKey = false;
+            
 
 
             //Console.WriteLine("\n\n");
@@ -63,7 +66,8 @@ namespace ConsoleToolsTest
                             var t = new Timer {Interval = 2000};
                             t.Elapsed += (s1, e1) =>
                             {
-                                Konsole.WriteLine("\n\nHello from timer... Press Z to stop waiting for events and return to menu");
+                                Konsole.WriteLineAndLog("\n\nHello from timer... Press Z to stop waiting for events and return to menu");
+                                Konsole.PurgeLog();
                                 while (Console.KeyAvailable)
                                 {
                                     var k = Console.ReadKey();
@@ -83,15 +87,38 @@ namespace ConsoleToolsTest
                             //Konsole.PressAnyKey();
                         }
                     },
-                    new MenuItem(){Title="Print object", Action = async () =>
+                    new MenuItem
+                    {Title="Print object", Action = async () =>
                     {
-                        var aPerson = new Person {Name = "Wassily Pupeking", Age = 888};
+                        var aPerson = new Person {Name = "Wassily Pupeking", Age = 888, Details = new PersonDetails(){Height = 123, SchoolName = "Asdfg", DetailedDetails = new DetailedDetails(){DetailOne = "One", DetailTwo = 2}}};
                         await Task.Run(() =>
                         {
                             Konsole.PrintObject(aPerson, nameof(aPerson));
                             Konsole.PressAnyKey();
+                            Konsole.PurgeLog();
                         });
                     }},
+                    new MenuItem(){Title = "Print simple", Action = async () =>
+                    {
+                        var x = "test";
+                        await Task.Run(() =>
+                        {
+                            Konsole.WriteLine(x.GetType().ToString());
+
+                            var props = x.GetType().GetProperties().Where(p => p.GetIndexParameters().Length == 0);
+                            Konsole.WriteLine(props.Count().ToString());
+
+                            foreach (var info in props)
+                            {
+                                Konsole.WriteLine(info.Name);
+                                var value = info.GetValue(x);
+                                Konsole.WriteLine(value.ToString());
+                            }
+
+                            Konsole.PressAnyKey();
+                        });
+                    }},
+                    new MenuItem(),
                     new MenuItem()
                 }
             };
@@ -105,7 +132,23 @@ namespace ConsoleToolsTest
     {
         public string Name { get; set; }
         public int Age { get; set; }
+        public PersonDetails Details { get; set; }
     }
+
+
+    class PersonDetails
+    {
+        public int Height { get; set; }
+        public string SchoolName { get; set; }
+        public DetailedDetails DetailedDetails { get; set; }
+    }
+
+    class DetailedDetails
+    {
+        public string DetailOne { get; set; }
+        public int DetailTwo { get; set; }
+    }
+
 
 }
 

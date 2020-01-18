@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -12,7 +14,39 @@ namespace ConsoleTools
     /// </summary>
     public static class Konsole
     {
+
+        //todo regions
+        
+
+        //todo this should be a stringbuilder
+        private static string _toAutoLog = "";
+
+        public static void PurgeLog()
+        {
+            if (string.IsNullOrWhiteSpace(_toAutoLog)) return;
+            KonsoleLogger.Log(LogLevel.LessImportant, _toAutoLog, ConsoleColor.White, true, true);
+            _toAutoLog = "";
+
+        }
+
         private static readonly object KlLock = new object();
+
+        //todo сделать выделение цветом по управляющему символу
+
+
+        public static void WriteAndLog(string s, ConsoleColor kolor = ConsoleColor.White)
+        {
+            Write(s, kolor);
+            _toAutoLog += s;
+        }
+
+        public static void WriteLineAndLog(string s = "", ConsoleColor kolor = ConsoleColor.White)
+        {
+            WriteLine(s, kolor);
+            _toAutoLog += s + "\n";
+        }
+
+
 
         public static void Write(string s, ConsoleColor kolor = ConsoleColor.White)
         {
@@ -93,27 +127,57 @@ namespace ConsoleTools
             return result;
         }
 
-        public static void PrintObject(object o, string name)
+
+        //todo отключать log надо б как-то
+        public static void PrintObject(object o, string name, int indent = 0)
         {
 
-            var col1 = ConsoleColor.Blue;
-            var col2 = ConsoleColor.DarkMagenta;
+            var exclude = new[] { typeof(string), typeof(DateTime) };
 
-            WriteLine();
-            WriteLine(name, ConsoleColor.White);
-            foreach (var unused in name)
+            IEnumerable<PropertyInfo> Props(object x) //without indexers
             {
-                Write("-", ConsoleColor.White);
+                return x.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.GetIndexParameters().Length == 0);
+            }
+            
+            //has properties and is not in the exclude list
+            bool NeedsRecursive(object x)
+            {
+                return !exclude.Contains(x.GetType()) && Props(x).Any();
             }
 
-            WriteLine();
+            void DoIndent()
+            {
+                for (int i = 0; i < indent; i++) { WriteAndLog(" "); }
+            }
 
-            foreach (var prop in o.GetType().GetProperties())
+
+            var col1 = ConsoleColor.Yellow;
+            var col2 = ConsoleColor.DarkCyan;
+
+            WriteLineAndLog();
+            DoIndent();
+            WriteLineAndLog(name, ConsoleColor.White);
+            DoIndent();
+            foreach (var unused in name)
+            {
+                WriteAndLog("-", ConsoleColor.White);
+            }
+
+            WriteLineAndLog();
+
+            foreach (var prop in Props(o))
             {
                 var value = prop.GetValue(o);
-                Write(prop.Name, col1);
-                Write(" = ", ConsoleColor.White);
-                WriteLine((value ?? " -<null>- ").ToString(), col2);
+
+                if (NeedsRecursive(value)) PrintObject(value, name + "." + prop.Name, indent + 2);
+                else
+                {
+                    DoIndent();
+
+                    WriteAndLog(prop.Name, col1);
+                    WriteAndLog(" = ", ConsoleColor.White);
+                    WriteLineAndLog((value ?? " -<null>- ").ToString(), col2);
+                }
             }
 
 

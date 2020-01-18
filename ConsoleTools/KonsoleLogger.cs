@@ -18,7 +18,7 @@ namespace ConsoleTools
 
         private static readonly object WriteLock = new object();
 
-        public static void Log(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan, bool includeTime = true)
+        public static void Log(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan, bool includeTime = true, bool silent = false)
         {
             if ((int)ll > (int)LogLevel) return;
 
@@ -27,8 +27,11 @@ namespace ConsoleTools
                 s += "\n";
                 var rightNow = "";
                 if (includeTime) rightNow = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + " : ";
-                Konsole.Write(rightNow);
-                Konsole.Write(s, kolor);
+                if (!silent)
+                {
+                    Konsole.Write(rightNow, ConsoleColor.White);
+                    Konsole.Write(s, kolor);
+                }
 
                 if (!WriteToFile) return;
 
