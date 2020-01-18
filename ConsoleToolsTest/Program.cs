@@ -40,60 +40,60 @@ namespace ConsoleToolsTest
             //}
 
 
-            //while (true)
-            //{
-            //    //Konsole.WriteLine($"[{new KonsoleStringEdit {Prompt ="Введи строку:", DefaultValue = "Dефаульт", MaxLength = 15, EscapeBehavior = KonsoleStringEditEscapeBehavior.ReturnEmptystring}.ReadString()}]");
-            //    var s = Konsole.ReadString("Enter something:", "");
-            //    Konsole.WriteLine($"[{s}]");
-                
-            //}
-
-
-
-
-
-
-            var menu = new Menu("Main")
+            while (true)
             {
-                Items = new List<MenuItem>()
-                {
-                    new MenuItem()
-                    {
-                        Title = "One",
-                        Action = async () =>
-                        {
+                //Konsole.WriteLine($"[{new KonsoleStringEdit {Prompt ="Введи строку:", DefaultValue = "Dефаульт", MaxLength = 15, EscapeBehavior = KonsoleStringEditEscapeBehavior.ReturnEmptystring}.ReadString()}]");
+                var s = Konsole.ReadString("Enter something:", "something");
+                Konsole.WriteLine($"[{s}]");
 
-                            var keepWaiting = true;
+            }
 
-                            var t = new Timer {Interval = 2000};
-                            t.Elapsed += (s1, e1) =>
-                            {
-                                Konsole.WriteLine("\n\nHello from timer... Press Z to stop waiting for events and return to menu");
-                                while (Console.KeyAvailable)
-                                {
-                                    var k = Console.ReadKey();
-                                    if (k.KeyChar.ToString().ToLower() == "Z") keepWaiting = false;
-                                }
-                            };
-                            t.Start();
 
-                            Konsole.WriteLine("\nWaiting for events...");
 
-                            while (keepWaiting)
-                            {
-                                Konsole.WriteLine("waiting.....");
-                                Thread.Sleep(100);
-                            }
 
-                            //Konsole.PressAnyKey();
-                        }
-                    },
-                    new MenuItem(),
-                    new MenuItem()
-                }
-            };
 
-            await menu.Loop();
+
+            //var menu = new Menu("Main")
+            //{
+            //    Items = new List<MenuItem>()
+            //    {
+            //        new MenuItem()
+            //        {
+            //            Title = "One",
+            //            Action = async () =>
+            //            {
+
+            //                var keepWaiting = true;
+
+            //                var t = new Timer {Interval = 2000};
+            //                t.Elapsed += (s1, e1) =>
+            //                {
+            //                    Konsole.WriteLine("\n\nHello from timer... Press Z to stop waiting for events and return to menu");
+            //                    while (Console.KeyAvailable)
+            //                    {
+            //                        var k = Console.ReadKey();
+            //                        if (k.KeyChar.ToString().ToLower() == "Z") keepWaiting = false;
+            //                    }
+            //                };
+            //                t.Start();
+
+            //                Konsole.WriteLine("\nWaiting for events...");
+
+            //                while (keepWaiting)
+            //                {
+            //                    Konsole.WriteLine("waiting.....");
+            //                    Thread.Sleep(100);
+            //                }
+
+            //                //Konsole.PressAnyKey();
+            //            }
+            //        },
+            //        new MenuItem(),
+            //        new MenuItem()
+            //    }
+            //};
+
+            //await menu.Loop();
 
         }
     }
