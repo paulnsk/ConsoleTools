@@ -15,7 +15,7 @@ namespace ConsoleTools
         public ConsoleColor PromptColor { get; set; } = ConsoleColor.White;
         public bool LineFeed { get; set; } = true;
         public string Prompt { get; set; } = "";
-        public bool ShowRedEscapeInPrompt { get; set; } = true;
+        public bool ShowRedEscapeInPrompt { get; set; } = false;
 
         public KonsoleStringEditEscapeBehavior EscapeBehavior { get; set; } =
             KonsoleStringEditEscapeBehavior.ReturnEmptystring;

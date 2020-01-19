@@ -8,7 +8,7 @@ namespace ConsoleTools
     {
 
         //Menu items are invoked by prssing number keys therefore only single digit numbers are possible
-        public static int MaxItems = 9; 
+        //public static int MaxItems = 9; 
 
         
 
@@ -31,7 +31,7 @@ namespace ConsoleTools
 
             BeforeDisplay?.Invoke();
             
-            if (Items.Count > 9) Konsole.WriteLine("Too many menu items!!", ConsoleColor.Red);
+            //if (Items.Count > 9) Konsole.WriteLine("Too many menu items!!", ConsoleColor.Red);
             
             Konsole.WriteLine(_title, HotkeyColor);
             foreach (var unused in _title) { Konsole.Write("`",HotkeyColor); }
@@ -40,14 +40,29 @@ namespace ConsoleTools
 
             for (var i = 0; i < Items.Count; i++)
             {
-                Konsole.Write((i + 1) + " ", HotkeyColor);
+                Konsole.Write(NumberToHotchar(i + 1) + " ", HotkeyColor);
                 Konsole.WriteLine(Items[i].Title);
             }
 
             Console.WriteLine();
 
         }
-        
+
+
+        private string NumberToHotchar(int number)
+        {
+            if (number < 10) return number.ToString();
+            return ((char) (number + 87)).ToString();
+        }
+
+        private int HotcharToNumber(char c)
+        {
+            var code = (int)c.ToString().ToLower()[0];
+            if (code > (int)'9') code -= 87;
+            else code -= 48;
+            return code;
+        }
+
 
         public async Task Loop()
         {
@@ -61,8 +76,9 @@ namespace ConsoleTools
                 var k = Console.ReadKey();
                 if(k.KeyChar==(char)27 || k.KeyChar.ToString().ToLower() == "q") break;
 
-                var itemNumber = k.KeyChar.ToString().ToInt() - 1;
-                
+                var itemNumber = HotcharToNumber(k.KeyChar) - 1;
+                //var itemNumber = k.KeyChar.ToString().ToInt() - 1;
+
 
                 if (itemNumber >= 0 && itemNumber < Items.Count)
                 {

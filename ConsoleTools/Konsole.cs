@@ -154,16 +154,13 @@ namespace ConsoleTools
             var col1 = ConsoleColor.Yellow;
             var col2 = ConsoleColor.DarkCyan;
 
-            WriteLineAndLog();
+            //WriteLineAndLog();
             DoIndent();
-            WriteLineAndLog(name, ConsoleColor.White);
-            DoIndent();
-            foreach (var unused in name)
-            {
-                WriteAndLog("-", ConsoleColor.White);
-            }
+            WriteLineAndLog(name);
+            //DoIndent();
+            //foreach (var unused in name) { WriteAndLog("-"); }
 
-            WriteLineAndLog();
+            //WriteLineAndLog();
 
             foreach (var prop in Props(o))
             {

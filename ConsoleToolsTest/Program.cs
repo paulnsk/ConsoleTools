@@ -103,21 +103,21 @@ namespace ConsoleToolsTest
                         var x = "test";
                         await Task.Run(() =>
                         {
-                            Konsole.WriteLine(x.GetType().ToString());
-
-                            var props = x.GetType().GetProperties().Where(p => p.GetIndexParameters().Length == 0);
-                            Konsole.WriteLine(props.Count().ToString());
-
-                            foreach (var info in props)
-                            {
-                                Konsole.WriteLine(info.Name);
-                                var value = info.GetValue(x);
-                                Konsole.WriteLine(value.ToString());
-                            }
+                            Konsole.PrintObject(x,"X");
 
                             Konsole.PressAnyKey();
                         });
                     }},
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
+                    new MenuItem(),
                     new MenuItem(),
                     new MenuItem()
                 }
