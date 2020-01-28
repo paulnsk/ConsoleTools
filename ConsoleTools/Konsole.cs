@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -147,7 +148,7 @@ namespace ConsoleTools
 
             void DoIndent()
             {
-                for (int i = 0; i < indent; i++) { WriteAndLog(" "); }
+                for (var i = 0; i < indent; i++) { WriteAndLog(" "); }
             }
 
 
@@ -156,11 +157,11 @@ namespace ConsoleTools
 
             //WriteLineAndLog();
             DoIndent();
-            WriteLineAndLog(name);
-            //DoIndent();
-            //foreach (var unused in name) { WriteAndLog("-"); }
-
-            //WriteLineAndLog();
+            WriteAndLog(name);
+            WriteAndLog(" <", ConsoleColor.Yellow);
+            WriteAndLog(o.GetType().ToString(), ConsoleColor.DarkGray);
+            WriteLineAndLog(">", ConsoleColor.Yellow);
+            
 
             foreach (var prop in Props(o))
             {
@@ -171,9 +172,18 @@ namespace ConsoleTools
                 {
                     DoIndent();
 
-                    WriteAndLog(prop.Name, col1);
+                    WriteAndLog(". " + prop.Name, col1);
                     WriteAndLog(" = ", ConsoleColor.White);
                     WriteLineAndLog((value ?? " -<null>- ").ToString(), col2);
+                }
+            }
+            if (o is IEnumerable<object> valueItems)
+            {
+                var i = 0;
+                foreach (var item in valueItems)
+                {
+                    PrintObject(item, name + $"[{i}]", indent + 2);
+                    i++;
                 }
             }
 

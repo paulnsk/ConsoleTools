@@ -49,12 +49,24 @@ namespace ConsoleTools
         }
 
 
+
+        /// <summary>
+        /// converts 5 to  '5', 15 to 'f'
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
         private string NumberToHotchar(int number)
         {
             if (number < 10) return number.ToString();
             return ((char) (number + 87)).ToString();
         }
 
+
+        /// <summary>
+        /// Converts '1' to 1, 'a' to 10
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         private int HotcharToNumber(char c)
         {
             var code = (int)c.ToString().ToLower()[0];
