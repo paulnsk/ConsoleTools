@@ -14,7 +14,7 @@ namespace ConsoleTools
 
         public static bool WriteToFile = true;
 
-        public static string LogFilePath => U.ExePath() + ".log";
+        public static string FilePath => U.ExePath() + ".log";
 
         private static readonly object WriteLock = new object();
 
@@ -37,7 +37,7 @@ namespace ConsoleTools
 
                 try
                 {
-                    var f = new FileInfo(LogFilePath);
+                    var f = new FileInfo(FilePath);
                     var sw = f.AppendText();
                     sw.Write(rightNow + s);
                     sw.Close();
@@ -47,7 +47,12 @@ namespace ConsoleTools
                     Konsole.WriteLine("ERROR writing to log file: \n" + "Message: " + s + "\nError: " + e.Message, ConsoleColor.Red);
                 }
             }
+        }
 
+        public static void LogSilent(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan,
+            bool includeTime = true)
+        {
+            Log(ll, s, kolor, includeTime, true);
         }
 
     }

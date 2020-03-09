@@ -10,7 +10,7 @@ namespace ConsoleTools
         //Menu items are invoked by prssing number keys therefore only single digit numbers are possible
         //public static int MaxItems = 9; 
 
-        
+        public static string PressNumberMessage = "Press number or Q to exit: ";
 
         public Menu(string title)
         {
@@ -83,18 +83,18 @@ namespace ConsoleTools
             {
                 
                 Display();
-                Konsole.Write("Press number or Q to exit: ", PromptColor);
+                Konsole.Write(PressNumberMessage, PromptColor);
 
                 var k = Console.ReadKey();
                 if(k.KeyChar==(char)27 || k.KeyChar.ToString().ToLower() == "q") break;
 
                 var itemNumber = HotcharToNumber(k.KeyChar) - 1;
                 //var itemNumber = k.KeyChar.ToString().ToInt() - 1;
-
-
+                
                 if (itemNumber >= 0 && itemNumber < Items.Count)
                 {
                     await Items[itemNumber].Action();
+                    if (Items[itemNumber].ItemBreaksMenuLoop) break;
                 }
             }
             

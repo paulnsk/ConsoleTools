@@ -7,11 +7,18 @@ namespace ConsoleTools
     public class MenuItem
     {
         public string Title = "Menu Item";
-        public Func<Task> Action = async () => { await Task.Run(()=>
+
+        public bool ItemBreaksMenuLoop = false;
+
+        public Func<Task> Action = async () =>
         {
-            Konsole.WriteLine("\n\nMenu action not specified!", ConsoleColor.Red);
-            Thread.Sleep(1000);
-        });   };
+            await Task.Run(() =>
+            {
+                Konsole.WriteLine("\n\nMenu action not specified!", ConsoleColor.Red);
+                Thread.Sleep(1000);
+            });
+        };
+
         public ConsoleColor Color = ConsoleColor.White;
 
     }

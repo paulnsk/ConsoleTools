@@ -66,6 +66,8 @@ namespace ConsoleTools
 
 
         public static bool CrashOnEscapeKey = true;
+        public static string AnyKeyMessage = "Press 'Any' key to continue";
+        public static ConsoleColor ConfirmColor = ConsoleColor.Blue;
 
         public static void PressAnyKey(string message = "")
         {
@@ -73,7 +75,7 @@ namespace ConsoleTools
             var crashMsg = CrashOnEscapeKey ? " or 'Esc' key to crash" : "";
 
             if (message != "") WriteLine(message, ConsoleColor.Yellow);
-            Write("Press 'Any' key to continue" + crashMsg + "...", ConsoleColor.Yellow);
+            Write(AnyKeyMessage + crashMsg + "...", ConsoleColor.Yellow);
             var c = Console.ReadKey();
             Console.WriteLine("\n" + c.Key + " was pressed.");
             if (CrashOnEscapeKey && c.KeyChar == 27) throw new Exception("Escape key pressed");
@@ -83,9 +85,9 @@ namespace ConsoleTools
         {
             if (messageWithoutQuestionMark == "") messageWithoutQuestionMark = "Are you sure";
 
-            Write(messageWithoutQuestionMark, ConsoleColor.Blue);
+            Write(messageWithoutQuestionMark, ConfirmColor);
             Write(" (Y/N)", ConsoleColor.Yellow);
-            Write(" ?", ConsoleColor.Blue);
+            Write(" ?", ConfirmColor);
             var answer = Console.ReadKey().KeyChar.ToString().ToLower();
             var result = answer == "y";
             if (result) Write(" (Yes)", ConsoleColor.Green);
