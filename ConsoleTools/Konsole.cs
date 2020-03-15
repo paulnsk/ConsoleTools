@@ -44,7 +44,7 @@ namespace ConsoleTools
         public static void WriteLineAndLog(string s = "", ConsoleColor kolor = ConsoleColor.White)
         {
             WriteLine(s, kolor);
-            _toAutoLog += s + "\n";
+            _toAutoLog += s + Environment.NewLine;
         }
 
 
@@ -61,7 +61,7 @@ namespace ConsoleTools
 
         public static void WriteLine(string s = "", ConsoleColor kolor = ConsoleColor.White)
         {
-            Write(s + "\n", kolor);
+            Write(s + Environment.NewLine, kolor);
         }
 
 
@@ -77,7 +77,7 @@ namespace ConsoleTools
             if (message != "") WriteLine(message, ConsoleColor.Yellow);
             Write(AnyKeyMessage + crashMsg + "...", ConsoleColor.Yellow);
             var c = Console.ReadKey();
-            Console.WriteLine("\n" + c.Key + " was pressed.");
+            Console.WriteLine(Environment.NewLine + c.Key + " was pressed.");
             if (CrashOnEscapeKey && c.KeyChar == 27) throw new Exception("Escape key pressed");
         }
 
@@ -103,7 +103,7 @@ namespace ConsoleTools
         /// <param name="defaultValue"></param>
         /// <param name="maxLength"></param>
         /// <returns></returns>
-        public static string ReadString(string prompt, string defaultValue = "", int maxLength = 20)
+        public static string ReadString(string prompt, string defaultValue = "", int maxLength = 20, bool isPassword=false)
         {
             return new KonsoleStringEdit
             {

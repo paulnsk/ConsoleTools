@@ -14,7 +14,7 @@ namespace ConsoleTools
         {
             await Task.Run(() =>
             {
-                Konsole.WriteLine("\n\nMenu action not specified!", ConsoleColor.Red);
+                Konsole.WriteLine(Environment.NewLine + Environment.NewLine + "Menu action not specified!", ConsoleColor.Red);
                 Thread.Sleep(1000);
             });
         };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace ConsoleTools
 {
@@ -9,6 +10,7 @@ namespace ConsoleTools
     /// </summary>
     public class KonsoleStringEdit
     {
+        
         public int MaxLength { get; set; } = -1;
         public string DefaultValue { get; set; } = "";
         public ConsoleColor ValueColor { get; set; } = ConsoleColor.Yellow;
@@ -16,10 +18,24 @@ namespace ConsoleTools
         public bool LineFeed { get; set; } = true;
         public string Prompt { get; set; } = "";
         public bool ShowRedEscapeInPrompt { get; set; } = false;
+        public bool IsPassword { get; set; }
 
         public KonsoleStringEditEscapeBehavior EscapeBehavior { get; set; } =
             KonsoleStringEditEscapeBehavior.ReturnEmptystring;
 
+
+        private string RepeatChars(string chr, int count)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < count; i++) {sb.Append(chr); }
+            return sb.ToString();
+        }
+
+        private string Asterize(string s)
+        {
+            if (IsPassword) return s;
+            return RepeatChars("*", s.Length);
+        }
 
 
         private void GoLeft()
@@ -46,11 +62,11 @@ namespace ConsoleTools
             _pos = _value.Length;
             Redraw();
         }
-
+        
         private void Redraw()
         {
             Console.SetCursorPosition(_savedX, _savedY);
-            Konsole.Write(_value + " ", ValueColor); //затираем лишнее
+            Konsole.Write(Asterize(_value) + " ", ValueColor); //затираем лишнее
             Console.SetCursorPosition(_savedX + _pos, _savedY);
         }
 
@@ -130,7 +146,7 @@ namespace ConsoleTools
 
             _savedX = Console.CursorLeft;
             _savedY = Console.CursorTop;
-            Konsole.Write(_value, ValueColor);
+            Konsole.Write(Asterize(_value), ValueColor);
 
             while (true)
             {
@@ -198,5 +214,7 @@ namespace ConsoleTools
         ReturnEsc,
         Ignore
     }
+
+    
 
 }

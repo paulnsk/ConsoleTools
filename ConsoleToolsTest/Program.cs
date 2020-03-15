@@ -27,12 +27,8 @@ namespace ConsoleToolsTest
             
 
 
-            //Console.WriteLine("\n\n");
-            //Konsole.WriteLine(
-            //    "WARNING: if you delete all users you will have to manually copy new security.json file to solr data dir in order to restore access",
-            //    ConsoleColor.DarkRed);
-            //if (!Konsole.Confirmed("Continue?")) return;
-            //Console.WriteLine(); Console.WriteLine();
+            
+            
             Console.WriteLine();
 
             //var userName = Konsole.ReadString("Enter user name:", "").Trim();

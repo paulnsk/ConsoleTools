@@ -24,7 +24,7 @@ namespace ConsoleTools
 
             lock (WriteLock)
             {
-                s += "\n";
+                s += Environment.NewLine;
                 var rightNow = "";
                 if (includeTime) rightNow = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + " : ";
                 if (!silent)
@@ -44,7 +44,7 @@ namespace ConsoleTools
                 }
                 catch (Exception e)
                 {
-                    Konsole.WriteLine("ERROR writing to log file: \n" + "Message: " + s + "\nError: " + e.Message, ConsoleColor.Red);
+                    Konsole.WriteLine("ERROR writing to log file: " + Environment.NewLine + "Message: " + s + Environment.NewLine + "Error: " + e.Message, ConsoleColor.Red);
                 }
             }
         }
