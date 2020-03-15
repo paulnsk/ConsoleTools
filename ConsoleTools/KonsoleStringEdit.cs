@@ -33,7 +33,7 @@ namespace ConsoleTools
 
         private string Asterize(string s)
         {
-            if (IsPassword) return s;
+            if (!IsPassword) return s;
             return RepeatChars("*", s.Length);
         }
 

@@ -102,13 +102,17 @@ namespace ConsoleTools
         /// <param name="prompt"></param>
         /// <param name="defaultValue"></param>
         /// <param name="maxLength"></param>
+        /// <param name="isPassword"></param>
         /// <returns></returns>
         public static string ReadString(string prompt, string defaultValue = "", int maxLength = 20, bool isPassword=false)
         {
             return new KonsoleStringEdit
             {
-                Prompt = prompt, DefaultValue = defaultValue, MaxLength = maxLength,
-                EscapeBehavior = KonsoleStringEditEscapeBehavior.ReturnEmptystring
+                Prompt = prompt, 
+                DefaultValue = defaultValue, 
+                MaxLength = maxLength,
+                EscapeBehavior = KonsoleStringEditEscapeBehavior.ReturnEmptystring,
+                IsPassword = isPassword
             }.ReadString();
         }
 

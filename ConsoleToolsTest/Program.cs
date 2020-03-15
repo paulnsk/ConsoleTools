@@ -31,6 +31,10 @@ namespace ConsoleToolsTest
             
             Console.WriteLine();
 
+            string sss = Konsole.ReadString("Enter something: ", "abcd", 20, true);
+            Konsole.PressAnyKey(sss);
+            return;
+
             //var userName = Konsole.ReadString("Enter user name:", "").Trim();
             //if (string.IsNullOrWhiteSpace(userName))
             //{
