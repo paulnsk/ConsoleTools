@@ -23,7 +23,7 @@ namespace ConsoleTools
         public KonsoleStringEditEscapeBehavior EscapeBehavior { get; set; } =
             KonsoleStringEditEscapeBehavior.ReturnEmptystring;
 
-
+        //todo а что будет если строка не влезет в окно??
         private string RepeatChars(string chr, int count)
         {
             var sb = new StringBuilder();

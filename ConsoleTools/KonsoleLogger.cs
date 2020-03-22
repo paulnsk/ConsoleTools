@@ -49,6 +49,11 @@ namespace ConsoleTools
             }
         }
 
+        public static void Log(string s)
+        {
+            Log(LogLevel.Important, s);
+        }
+
         public static void LogSilent(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan,
             bool includeTime = true)
         {
