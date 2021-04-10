@@ -16,8 +16,31 @@ namespace ConsoleTools
     public static class Konsole
     {
 
+        public const string EscapeChar = "♦"; //Type Alt+4; 
+
+        public static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
+        {
+            ['k'] = ConsoleColor.Black,
+            ['B'] = ConsoleColor.DarkBlue,
+            ['G'] = ConsoleColor.DarkGreen,
+            ['C'] = ConsoleColor.DarkCyan,
+            ['R'] = ConsoleColor.DarkRed,
+            ['M'] = ConsoleColor.DarkMagenta,
+            ['Y'] = ConsoleColor.DarkYellow,
+            ['a'] = ConsoleColor.Gray,
+            ['A'] = ConsoleColor.DarkGray,
+            ['b'] = ConsoleColor.Blue,
+            ['g'] = ConsoleColor.Green,
+            ['c'] = ConsoleColor.Cyan,
+            ['r'] = ConsoleColor.Red,
+            ['m'] = ConsoleColor.Magenta,
+            ['y'] = ConsoleColor.Yellow,
+            ['w'] = ConsoleColor.White
+        };
+
+
         //todo regions
-        
+
 
         //todo this should be a stringbuilder
         private static string _toAutoLog = "";
@@ -25,14 +48,14 @@ namespace ConsoleTools
         public static void PurgeLog()
         {
             if (string.IsNullOrWhiteSpace(_toAutoLog)) return;
-            KonsoleLogger.Log(LogLevel.LessImportant, _toAutoLog, ConsoleColor.White, true, true);
+            KonsoleLogger.Log(MessageLevel.LessImportant, _toAutoLog, ConsoleColor.White, true, true);
             _toAutoLog = "";
 
         }
 
         private static readonly object KlLock = new object();
 
-        //todo сделать выделение цветом по управляющему символу
+        
 
 
         public static void WriteAndLog(string s, ConsoleColor kolor = ConsoleColor.White)
@@ -53,8 +76,29 @@ namespace ConsoleTools
         {
             lock (KlLock)
             {
-                Console.ForegroundColor = kolor;
-                Console.Write(s);
+
+                void WritePiece(string s1, ConsoleColor kolor1)
+                {
+                    Console.ForegroundColor = kolor1;
+                    Console.Write(s1);
+                    //Console.ForegroundColor = kolor;
+                }
+
+                if (!string.IsNullOrWhiteSpace(EscapeChar) && s.Contains(EscapeChar))
+                {
+                    var pieces = s.Split(new[] { EscapeChar }, StringSplitOptions.RemoveEmptyEntries);
+                    bool firstPiece = true;
+                    foreach (var piece in pieces)
+                    {
+                        var p = piece;
+                        if (firstPiece && !s.StartsWith(EscapeChar)) p = "_" + piece;
+                        firstPiece = false;
+                        var kolorKode = p[0];
+                        WritePiece(p.Remove(0, 1), KolorKodes.TryGetValue(kolorKode, out var pieceKolor) ? pieceKolor : kolor);
+                    }
+                }
+                else WritePiece(s, kolor);
+
                 Console.ResetColor();
             }
         }
@@ -135,7 +179,7 @@ namespace ConsoleTools
         }
 
 
-        //todo отключать log надо б как-то
+        //todo отключать log надо б
         public static void PrintObject(object o, string name, int indent = 0)
         {
 
@@ -149,6 +193,7 @@ namespace ConsoleTools
             //has properties and is not in the exclude list
             bool NeedsRecursive(object x)
             {
+                if (x == null) return false;
                 return !exclude.Contains(x.GetType()) && Props(x).Any();
             }
 
@@ -181,6 +226,7 @@ namespace ConsoleTools
                     WriteAndLog(". " + prop.Name, col1);
                     WriteAndLog(" = ", ConsoleColor.White);
                     WriteLineAndLog((value ?? " -<null>- ").ToString(), col2);
+                    
                 }
             }
             if (o is IEnumerable<object> valueItems)

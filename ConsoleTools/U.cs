@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace ConsoleTools
 {
+    //todo remove, use Utils
     internal static class U
     {
         public static string ExePath()

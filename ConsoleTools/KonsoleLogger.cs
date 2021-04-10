@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace ConsoleTools
 {
@@ -18,9 +20,9 @@ namespace ConsoleTools
 
         private static readonly object WriteLock = new object();
 
-        public static void Log(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan, bool includeTime = true, bool silent = false)
+        public static void Log(MessageLevel ml, string s, ConsoleColor kolor = ConsoleColor.Cyan, bool includeTime = true, bool silent = false)
         {
-            if ((int)ll > (int)LogLevel) return;
+            if ((int)ml > (int)LogLevel) return;
 
             lock (WriteLock)
             {
@@ -39,7 +41,7 @@ namespace ConsoleTools
                 {
                     var f = new FileInfo(FilePath);
                     var sw = f.AppendText();
-                    sw.Write(rightNow + s);
+                    sw.Write(rightNow + ClearEscape(s));
                     sw.Close();
                 }
                 catch (Exception e)
@@ -49,15 +51,41 @@ namespace ConsoleTools
             }
         }
 
-        public static void Log(string s)
+        private static string ClearEscape(string s)
         {
-            Log(LogLevel.Important, s);
+            var sb = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i].ToString() == Konsole.EscapeChar)
+                {
+                    i+=1;
+                    continue;
+                }
+
+                sb.Append(s[i]);
+            }
+
+            return sb.ToString();
+            ////не работает, сжирает первую букву у которой нет искейпчара
+            //var pieces = s.Split(new[] { Konsole.EscapeChar }, StringSplitOptions.None);
+            //var cleanPieces = new List<string>();
+            //foreach (var piece in pieces)
+            //{
+            //    if (piece.Length > 0) cleanPieces.Add(piece.Remove(0, 1));
+            //}
+
+            //return string.Join("", cleanPieces);
         }
 
-        public static void LogSilent(LogLevel ll, string s, ConsoleColor kolor = ConsoleColor.Cyan,
+        public static void Log(string s, ConsoleColor kolor = ConsoleColor.Cyan)
+        {
+            Log(MessageLevel.LessImportant, s, kolor);
+        }
+
+        public static void LogSilent(MessageLevel ml, string s, ConsoleColor kolor = ConsoleColor.Cyan,
             bool includeTime = true)
         {
-            Log(ll, s, kolor, includeTime, true);
+            Log(ml, s, kolor, includeTime, true);
         }
 
     }

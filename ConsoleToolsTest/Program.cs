@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTools;
+using Kl = ConsoleTools.KonsoleLogger;
 using Timer = System.Timers.Timer;
 
 namespace ConsoleToolsTest
@@ -30,10 +31,13 @@ namespace ConsoleToolsTest
             
             
             Console.WriteLine();
-
-            string sss = Konsole.ReadString("Enter something: ", "abcd", 20, true);
-            Konsole.PressAnyKey(sss);
+            var x = "123";
+            Kl.Log($"Test ♦g{x}",ConsoleColor.Yellow);
             return;
+
+            //string sss = Konsole.ReadString("Enter something: ", "abcd", 20, true);
+            //Konsole.PressAnyKey(sss);
+            //return;
 
             //var userName = Konsole.ReadString("Enter user name:", "").Trim();
             //if (string.IsNullOrWhiteSpace(userName))
@@ -49,7 +53,7 @@ namespace ConsoleToolsTest
             //    var s = Konsole.ReadString("Enter something:", "something");
             //    Konsole.WriteLine($"[{s}]");
             //}
-            
+
 
             var menu = new Menu("Main")
             {
