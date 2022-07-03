@@ -66,15 +66,7 @@ namespace ConsoleTools
             }
 
             return sb.ToString();
-            ////не работает, сжирает первую букву у которой нет искейпчара
-            //var pieces = s.Split(new[] { Konsole.EscapeChar }, StringSplitOptions.None);
-            //var cleanPieces = new List<string>();
-            //foreach (var piece in pieces)
-            //{
-            //    if (piece.Length > 0) cleanPieces.Add(piece.Remove(0, 1));
-            //}
 
-            //return string.Join("", cleanPieces);
         }
 
         public static void Log(string s, ConsoleColor kolor = ConsoleColor.Cyan)

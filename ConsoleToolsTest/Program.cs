@@ -33,18 +33,10 @@ namespace ConsoleToolsTest
             Console.WriteLine();
             var x = "123";
             Kl.Log($"Test ♦g{x}",ConsoleColor.Yellow);
-            return;
 
             //string sss = Konsole.ReadString("Enter something: ", "abcd", 20, true);
             //Konsole.PressAnyKey(sss);
             //return;
-
-            //var userName = Konsole.ReadString("Enter user name:", "").Trim();
-            //if (string.IsNullOrWhiteSpace(userName))
-            //{
-            //    Konsole.PressAnyKey("You did not enter name");
-            //    return;
-            //}
 
 
             //while (true)
@@ -61,34 +53,16 @@ namespace ConsoleToolsTest
                 {
                     new MenuItem()
                     {
-                        Title = "One",
+                        Title = "String editor example",
                         Action = async () =>
                         {
-
-                            var keepWaiting = true;
-
-                            var t = new Timer {Interval = 2000};
-                            t.Elapsed += (s1, e1) =>
+                            var s = Konsole.ReadString("\n\nString editor:", "edit me").Trim();
+                            if (string.IsNullOrWhiteSpace(s))
                             {
-                                Konsole.WriteLineAndLog("\n\nHello from timer... Press Z to stop waiting for events and return to menu");
-                                Konsole.PurgeLog();
-                                while (Console.KeyAvailable)
-                                {
-                                    var k = Console.ReadKey();
-                                    if (k.KeyChar.ToString().ToLower() == "Z") keepWaiting = false;
-                                }
-                            };
-                            t.Start();
-
-                            Konsole.WriteLine("\nWaiting for events...");
-
-                            while (keepWaiting)
-                            {
-                                Konsole.WriteLine("waiting.....");
-                                Thread.Sleep(100);
+                                Konsole.PressAnyKey("You did not enter anything");
+                                return;
                             }
-
-                            //Konsole.PressAnyKey();
+                            Konsole.PressAnyKey($"You entered [{s}]");
                         }
                     },
                     new MenuItem
@@ -99,10 +73,9 @@ namespace ConsoleToolsTest
                         {
                             Konsole.PrintObject(aPerson, nameof(aPerson));
                             Konsole.PressAnyKey();
-                            Konsole.PurgeLog();
                         });
                     }},
-                    new MenuItem(){Title = "Print simple", Action = async () =>
+                    new MenuItem(){Title = "Print another object", Action = async () =>
                     {
                         var x = "test";
                         await Task.Run(() =>

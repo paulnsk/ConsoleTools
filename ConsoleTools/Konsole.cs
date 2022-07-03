@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +17,7 @@ namespace ConsoleTools
 
         public const string EscapeChar = "♦"; //Type Alt+4; 
 
-        public static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
+        private static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
         {
             ['k'] = ConsoleColor.Black,
             ['B'] = ConsoleColor.DarkBlue,
@@ -39,39 +38,9 @@ namespace ConsoleTools
         };
 
 
-        //todo regions
-
-
-        //todo this should be a stringbuilder
-        private static string _toAutoLog = "";
-
-        public static void PurgeLog()
-        {
-            if (string.IsNullOrWhiteSpace(_toAutoLog)) return;
-            KonsoleLogger.Log(MessageLevel.LessImportant, _toAutoLog, ConsoleColor.White, true, true);
-            _toAutoLog = "";
-
-        }
 
         private static readonly object KlLock = new object();
-
         
-
-
-        public static void WriteAndLog(string s, ConsoleColor kolor = ConsoleColor.White)
-        {
-            Write(s, kolor);
-            _toAutoLog += s;
-        }
-
-        public static void WriteLineAndLog(string s = "", ConsoleColor kolor = ConsoleColor.White)
-        {
-            WriteLine(s, kolor);
-            _toAutoLog += s + Environment.NewLine;
-        }
-
-
-
         public static void Write(string s, ConsoleColor kolor = ConsoleColor.White)
         {
             lock (KlLock)
@@ -81,7 +50,6 @@ namespace ConsoleTools
                 {
                     Console.ForegroundColor = kolor1;
                     Console.Write(s1);
-                    //Console.ForegroundColor = kolor;
                 }
 
                 if (!string.IsNullOrWhiteSpace(EscapeChar) && s.Contains(EscapeChar))
@@ -178,8 +146,6 @@ namespace ConsoleTools
             return result;
         }
 
-
-        //todo отключать log надо б
         public static void PrintObject(object o, string name, int indent = 0)
         {
 
@@ -199,19 +165,18 @@ namespace ConsoleTools
 
             void DoIndent()
             {
-                for (var i = 0; i < indent; i++) { WriteAndLog(" "); }
+                for (var i = 0; i < indent; i++) { Write(" "); }
             }
 
 
             var col1 = ConsoleColor.Yellow;
             var col2 = ConsoleColor.DarkCyan;
 
-            //WriteLineAndLog();
             DoIndent();
-            WriteAndLog(name);
-            WriteAndLog(" <", ConsoleColor.Yellow);
-            WriteAndLog(o.GetType().ToString(), ConsoleColor.DarkGray);
-            WriteLineAndLog(">", ConsoleColor.Yellow);
+            Write(name);
+            Write(" <", ConsoleColor.Yellow);
+            Write(o.GetType().ToString(), ConsoleColor.DarkGray);
+            WriteLine(">", ConsoleColor.Yellow);
             
 
             foreach (var prop in Props(o))
@@ -223,9 +188,9 @@ namespace ConsoleTools
                 {
                     DoIndent();
 
-                    WriteAndLog(". " + prop.Name, col1);
-                    WriteAndLog(" = ", ConsoleColor.White);
-                    WriteLineAndLog((value ?? " -<null>- ").ToString(), col2);
+                    Write(". " + prop.Name, col1);
+                    Write(" = ", ConsoleColor.White);
+                    WriteLine((value ?? " -<null>- ").ToString(), col2);
                     
                 }
             }

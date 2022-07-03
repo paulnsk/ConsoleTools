@@ -20,8 +20,7 @@ namespace ConsoleTools
         public bool ShowRedEscapeInPrompt { get; set; } = false;
         public bool IsPassword { get; set; }
 
-        public KonsoleStringEditEscapeBehavior EscapeBehavior { get; set; } =
-            KonsoleStringEditEscapeBehavior.ReturnEmptystring;
+        public KonsoleStringEditEscapeBehavior EscapeBehavior { get; set; } = KonsoleStringEditEscapeBehavior.ReturnEmptystring;
 
         //todo что будет если строка не влезет в окно??
         private string RepeatChars(string chr, int count)
