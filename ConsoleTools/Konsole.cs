@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 
 
@@ -10,14 +11,14 @@ namespace ConsoleTools
 {
 
     /// <summary>
-    /// Console.Write() wrapper with simple color support
+    /// Console wrapper with simple color support
     /// </summary>
     public static class Konsole
     {
 
         public const string EscapeChar = "♦"; //Type Alt+4; 
 
-        private static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
+        public static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
         {
             ['k'] = ConsoleColor.Black,
             ['B'] = ConsoleColor.DarkBlue,
@@ -40,7 +41,7 @@ namespace ConsoleTools
 
 
         private static readonly object KlLock = new object();
-        
+
         public static void Write(string s, ConsoleColor kolor = ConsoleColor.White)
         {
             lock (KlLock)
@@ -71,15 +72,32 @@ namespace ConsoleTools
             }
         }
 
+        private static int CleanLength(string escapedString)
+        {
+            var escapeCount = escapedString.Count(x => x.ToString() == EscapeChar);
+            return escapedString.Length - escapeCount * 2;
+        }
+
+        public static void WriteLineUnderlined(string s = "", ConsoleColor kolor = ConsoleColor.White, char underlineChar='-')
+        {
+            WriteLine(s, kolor);
+            for (var i = 0; i < CleanLength(s); i++)
+            {
+                Write(underlineChar.ToString(), kolor);
+            }
+            WriteLine();
+        }
+
         public static void WriteLine(string s = "", ConsoleColor kolor = ConsoleColor.White)
         {
             Write(s + Environment.NewLine, kolor);
         }
 
 
-        public static bool CrashOnEscapeKey = true;
-        public static string AnyKeyMessage = "Press 'Any' key to continue";
-        public static ConsoleColor ConfirmColor = ConsoleColor.Blue;
+        public static bool CrashOnEscapeKey { get; set; } = false;
+        public static string AnyKeyMessage { get; set; } = "Press 'Any' key to continue";
+        public static ConsoleColor ConfirmColor { get; set; } = ConsoleColor.Blue;
+
 
         public static void PressAnyKey(string message = "")
         {
@@ -146,67 +164,24 @@ namespace ConsoleTools
             return result;
         }
 
-        public static void PrintObject(object o, string name, int indent = 0)
+        public static string UnEscape(string s)
         {
-
-            var exclude = new[] { typeof(string), typeof(DateTime) };
-
-            IEnumerable<PropertyInfo> Props(object x) //without indexers
+            var sb = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
             {
-                return x.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.GetIndexParameters().Length == 0);
-            }
-            
-            //has properties and is not in the exclude list
-            bool NeedsRecursive(object x)
-            {
-                if (x == null) return false;
-                return !exclude.Contains(x.GetType()) && Props(x).Any();
-            }
-
-            void DoIndent()
-            {
-                for (var i = 0; i < indent; i++) { Write(" "); }
-            }
-
-
-            var col1 = ConsoleColor.Yellow;
-            var col2 = ConsoleColor.DarkCyan;
-
-            DoIndent();
-            Write(name);
-            Write(" <", ConsoleColor.Yellow);
-            Write(o.GetType().ToString(), ConsoleColor.DarkGray);
-            WriteLine(">", ConsoleColor.Yellow);
-            
-
-            foreach (var prop in Props(o))
-            {
-                var value = prop.GetValue(o);
-
-                if (NeedsRecursive(value)) PrintObject(value, name + "." + prop.Name, indent + 2);
-                else
+                if (s[i].ToString() == Konsole.EscapeChar)
                 {
-                    DoIndent();
+                    i += 1;
+                    continue;
+                }
 
-                    Write(". " + prop.Name, col1);
-                    Write(" = ", ConsoleColor.White);
-                    WriteLine((value ?? " -<null>- ").ToString(), col2);
-                    
-                }
-            }
-            if (o is IEnumerable<object> valueItems)
-            {
-                var i = 0;
-                foreach (var item in valueItems)
-                {
-                    PrintObject(item, name + $"[{i}]", indent + 2);
-                    i++;
-                }
+                sb.Append(s[i]);
             }
 
+            return sb.ToString();
 
         }
-
+        
 
     }
 

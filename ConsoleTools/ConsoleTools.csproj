@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0</Version>
+    <Version>0.0.777</Version>
     <Authors>Paulnsk</Authors>
-    <Description>Paul's console tools</Description>
+    <Description>A collection of console utils: colored WriteLine, menu, string editor and logger</Description>
     <Copyright>Paulnsk</Copyright>
     <Platforms>AnyCPU;x64</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/paulnsk/ConsoleTools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/paulnsk/ConsoleTools</RepositoryUrl>
+    <PackageTags>console;colored;menu</PackageTags>
+    <PackageId>$(Authors).$(AssemblyName)</PackageId>
   </PropertyGroup>
 
 </Project>

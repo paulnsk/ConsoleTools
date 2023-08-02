@@ -12,8 +12,7 @@ namespace ConsoleTools
     {
 
         public static LogLevel LogLevel = LogLevel.Full;
-
-
+        
         public static bool WriteToFile = true;
 
         public static string FilePath => U.ExePath() + ".log";
@@ -41,7 +40,7 @@ namespace ConsoleTools
                 {
                     var f = new FileInfo(FilePath);
                     var sw = f.AppendText();
-                    sw.Write(rightNow + ClearEscape(s));
+                    sw.Write(rightNow + Konsole.UnEscape(s));
                     sw.Close();
                 }
                 catch (Exception e)
@@ -51,23 +50,6 @@ namespace ConsoleTools
             }
         }
 
-        private static string ClearEscape(string s)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i].ToString() == Konsole.EscapeChar)
-                {
-                    i+=1;
-                    continue;
-                }
-
-                sb.Append(s[i]);
-            }
-
-            return sb.ToString();
-
-        }
 
         public static void Log(string s, ConsoleColor kolor = ConsoleColor.Cyan)
         {

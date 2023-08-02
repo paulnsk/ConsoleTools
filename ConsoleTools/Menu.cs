@@ -7,7 +7,7 @@ namespace ConsoleTools
     public class Menu
     {
 
-        //Menu items are invoked by prssing number keys therefore only single digit numbers are possible
+        //Menu items are invoked by pressing number keys therefore only single digit numbers are possible
         //public static int MaxItems = 9; 
 
         public static string PressNumberMessage = "Press number or Q to exit: ";
@@ -17,15 +17,30 @@ namespace ConsoleTools
             _title = title;
         }
 
-        public Action BeforeDisplay = null;
+        public Action BeforeDisplay { get; set; } = null;
 
         public List<MenuItem> Items;
 
-        public ConsoleColor HotkeyColor = ConsoleColor.DarkYellow;
-        public ConsoleColor PromptColor = ConsoleColor.Cyan;
-        private string _title;
+        public ConsoleColor HotkeyColor { get; set; } = ConsoleColor.DarkYellow;
+        public ConsoleColor PromptColor { get; set; } = ConsoleColor.Cyan;
 
-        public void Display()
+        public delegate void DefaultExceptionHandlerAction(Exception exception, MenuItem menuItem);
+
+        public DefaultExceptionHandlerAction DefaultExceptionHandler { get; set; } = (e, mi) =>
+        {
+            Konsole.WriteLine();
+            Konsole.WriteLine();
+            Konsole.WriteLine($"♦RERROR ♦wexecuting command [♦b{mi.Title}♦w]:\n♦w{e.ToStringWithInners()}");
+            Konsole.WriteLine();
+            Konsole.WriteLine();
+            Konsole.PressAnyKey();
+        };
+
+        public bool DefaultExceptionHandlerEnabled { get; set; } = true;
+
+        private readonly string _title;
+
+        private void Display()
         {
             Console.Clear();
 
@@ -36,11 +51,10 @@ namespace ConsoleTools
             Konsole.WriteLine(_title, HotkeyColor);
             foreach (var unused in _title) { Konsole.Write("`",HotkeyColor); }
             Console.WriteLine();
-
-
+            
             for (var i = 0; i < Items.Count; i++)
             {
-                Konsole.Write(NumberToHotchar(i + 1) + " ", HotkeyColor);
+                Konsole.Write(NumberToHotChar(i + 1) + " ", HotkeyColor);
                 Konsole.WriteLine(Items[i].Title);
             }
 
@@ -55,7 +69,7 @@ namespace ConsoleTools
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        private string NumberToHotchar(int number)
+        private string NumberToHotChar(int number)
         {
             if (number < 10) return number.ToString();
             return ((char) (number + 87)).ToString();
@@ -67,7 +81,7 @@ namespace ConsoleTools
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        private int HotcharToNumber(char c)
+        private int HotCharToNumber(char c)
         {
             var code = (int)c.ToString().ToLower()[0];
             if (code > (int)'9') code -= 87;
@@ -88,12 +102,21 @@ namespace ConsoleTools
                 var k = Console.ReadKey();
                 if(k.KeyChar==(char)27 || k.KeyChar.ToString().ToLower() == "q") break;
 
-                var itemNumber = HotcharToNumber(k.KeyChar) - 1;
+                var itemNumber = HotCharToNumber(k.KeyChar) - 1;
                 //var itemNumber = k.KeyChar.ToString().ToInt() - 1;
                 
                 if (itemNumber >= 0 && itemNumber < Items.Count)
                 {
-                    await Items[itemNumber].Action();
+                    try
+                    {
+                        await Items[itemNumber].Action();
+                    }
+                    catch (Exception e)
+                    {
+                        if (DefaultExceptionHandlerEnabled) DefaultExceptionHandler(e, Items[itemNumber]);
+                        else throw;
+                    }
+                    
                     if (Items[itemNumber].ItemBreaksMenuLoop) break;
                 }
             }

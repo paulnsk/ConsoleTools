@@ -3,7 +3,6 @@ using System.Reflection;
 
 namespace ConsoleTools
 {
-    //todo remove, use Utils
     internal static class U
     {
         public static string ExePath()
@@ -12,21 +11,18 @@ namespace ConsoleTools
             if (ass == null) ass = Assembly.GetExecutingAssembly();
             return ass.Location;
         }
-
-        public static int ToInt(this string @this)
+        
+        /// <summary>
+        /// Shows Exception.InnerException recursively
+        /// </summary>
+        /// <param name="this"></param>
+        /// <returns></returns>
+        public static string ToStringWithInners(this Exception @this)
         {
-            var result = -1;
-            try
-            {
-                result = Convert.ToInt32(@this);
-            }
-
-            catch
-            {
-            }
-
+            if (@this == null) return "";
+            var result = "[" + @this.GetType() + "]: " + @this.Message;
+            if (@this.InnerException != null) result += "; Inner: " + @this.InnerException.ToStringWithInners();
             return result;
         }
-
     }
 }

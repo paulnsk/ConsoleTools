@@ -6,11 +6,11 @@ namespace ConsoleTools
 {
     public class MenuItem
     {
-        public string Title = "Menu Item";
+        public string Title { get; set; } = "Menu Item";
 
-        public bool ItemBreaksMenuLoop = false;
-
-        public Func<Task> Action = async () =>
+        public bool ItemBreaksMenuLoop { get; set; } = false;
+        
+        public Func<Task> Action { get; set; } = async () =>
         {
             await Task.Run(() =>
             {
@@ -19,7 +19,7 @@ namespace ConsoleTools
             });
         };
 
-        public ConsoleColor Color = ConsoleColor.White;
+        public ConsoleColor Color { get; set; } = ConsoleColor.White;
 
     }
 }
