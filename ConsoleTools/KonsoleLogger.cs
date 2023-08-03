@@ -6,7 +6,7 @@ using System.Text;
 namespace ConsoleTools
 {
     /// <summary>
-    /// Konsole Logger
+    /// A simple standalone logger which writes to both Konsole and file simultaneously
     /// </summary>
     public static class KonsoleLogger
     {

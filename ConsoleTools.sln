@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools", "ConsoleTools\ConsoleTools.csproj", "{F19851EF-E464-40C6-A783-C963CDFA2B0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleToolsTest", "ConsoleToolsTest\ConsoleToolsTest.csproj", "{FF512DD7-A1AF-4271-A41C-AA83C5110D58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleToolsWorkerserviceTest", "ConsoleToolsWorkerserviceTest\ConsoleToolsWorkerserviceTest.csproj", "{CF1CC792-150B-467B-9E6D-5FE31F13BA42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FF512DD7-A1AF-4271-A41C-AA83C5110D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF512DD7-A1AF-4271-A41C-AA83C5110D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF512DD7-A1AF-4271-A41C-AA83C5110D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF1CC792-150B-467B-9E6D-5FE31F13BA42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF1CC792-150B-467B-9E6D-5FE31F13BA42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF1CC792-150B-467B-9E6D-5FE31F13BA42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF1CC792-150B-467B-9E6D-5FE31F13BA42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
