@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools", "ConsoleTool
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleToolsTest", "ConsoleToolsTest\ConsoleToolsTest.csproj", "{FF512DD7-A1AF-4271-A41C-AA83C5110D58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleToolsWorkerserviceTest", "ConsoleToolsWorkerserviceTest\ConsoleToolsWorkerserviceTest.csproj", "{CF1CC792-150B-467B-9E6D-5FE31F13BA42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleToolsWorkerserviceTest", "ConsoleToolsWorkerserviceTest\ConsoleToolsWorkerserviceTest.csproj", "{CF1CC792-150B-467B-9E6D-5FE31F13BA42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

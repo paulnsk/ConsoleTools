@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 
@@ -99,7 +100,7 @@ namespace ConsoleTools
         public static ConsoleColor ConfirmColor { get; set; } = ConsoleColor.Blue;
 
 
-        public static void PressAnyKey(string message = "")
+        public static ConsoleKeyInfo PressAnyKey(string message = "")
         {
 
             var crashMsg = CrashOnEscapeKey ? " or 'Esc' key to crash" : "";
@@ -109,6 +110,7 @@ namespace ConsoleTools
             var c = Console.ReadKey();
             Console.WriteLine(Environment.NewLine + c.Key + " was pressed.");
             if (CrashOnEscapeKey && c.KeyChar == 27) throw new Exception("Escape key pressed");
+            return c;
         }
 
         public static bool Confirmed(string messageWithoutQuestionMark = "")
@@ -181,7 +183,50 @@ namespace ConsoleTools
             return sb.ToString();
 
         }
-        
+
+        public static void PrintJson(string json)
+        {
+            WriteLine(SyntaxHighlightJson(json));
+        }
+
+
+        //http://joelabrahamsson.com/syntax-highlighting-json-with-c/. Fuck knows how this works.
+        public static string SyntaxHighlightJson(string json)
+        {
+            return Regex.Replace(
+                json,
+                @"(¤(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\¤])*¤(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)".Replace('¤', '"'),
+                match =>
+                {
+                    var cls = "♦b";
+                    //var cls = "number";
+                    if (Regex.IsMatch(match.Value, @"^¤".Replace('¤', '"')))
+                    {
+                        if (Regex.IsMatch(match.Value, ":$"))
+                        {
+                            cls = "♦Y";
+                            //cls = "key";
+                        }
+                        else
+                        {
+                            cls = "♦g";
+                            //cls = "string";
+                        }
+                    }
+                    else if (Regex.IsMatch(match.Value, "true|false"))
+                    {
+                        cls = "♦c";
+                        //cls = "boolean";
+                    }
+                    else if (Regex.IsMatch(match.Value, "null"))
+                    {
+                        cls = "♦m";
+                        //cls = "null";
+                    }
+                    //return "<span class=\"" + cls + "\">" + match + "</span>";
+                    return cls + match + "♦w";
+                });
+        }
 
     }
 
