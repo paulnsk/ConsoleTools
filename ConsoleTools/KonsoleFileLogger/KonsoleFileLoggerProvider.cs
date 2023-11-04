@@ -1,25 +1,31 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace ConsoleTools.KonsoleFileLogger;
 
-public class KonsoleFileLoggerProvider : ILoggerProvider
+internal class KonsoleFileLoggerProvider : ILoggerProvider
 {
-    private readonly string _filePath;
-    private readonly List<string> _suppressedCategories;
+    private readonly KonsoleFileLoggerFilePathProvider _filePathProvider;
+    private readonly KonsoleFileLoggerConfig _config;
 
-    public KonsoleFileLoggerProvider(string filePath, List<string> suppressedCategories = default)
+    public KonsoleFileLoggerProvider(IOptions<KonsoleFileLoggerConfig> options, KonsoleFileLoggerFilePathProvider filePathProvider)
     {
-        _filePath = filePath;
-        _suppressedCategories = suppressedCategories;
+        _filePathProvider = filePathProvider;
+        _config = options.Value;
     }
+    
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new KonsoleFileLogger(categoryName, _filePath, _suppressedCategories);
+        var filePath = _filePathProvider.GetFilePath(categoryName);
+        Utils.EnsureDir(filePath);
+        return new KonsoleFileLogger(categoryName, filePath, _config.SuppressedCategories);
     }
 
     public void Dispose()
     {
     }
+
+     
 }

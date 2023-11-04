@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace ConsoleTools
 {
@@ -15,9 +13,9 @@ namespace ConsoleTools
         
         public static bool WriteToFile = true;
 
-        public static string FilePath => U.ExePath() + ".log";
+        public static string FilePath => Utils.ExePath() + ".log";
 
-        private static readonly object WriteLock = new object();
+        private static readonly object WriteLock = new();
 
         public static void Log(MessageLevel ml, string s, ConsoleColor kolor = ConsoleColor.Cyan, bool includeTime = true, bool silent = false)
         {
