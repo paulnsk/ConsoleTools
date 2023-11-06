@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.888</Version>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Paulnsk</Authors>
     <Description>A collection of console utils: colored WriteLine, menu, string editor and logger</Description>
     <Copyright>Paulnsk</Copyright>
@@ -17,7 +18,12 @@
       
   </PropertyGroup>
 
-  <ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />

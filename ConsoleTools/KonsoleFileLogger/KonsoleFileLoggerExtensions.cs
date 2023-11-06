@@ -1,26 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-namespace ConsoleTools.KonsoleFileLogger;
-
-public static class KonsoleFileLoggerExtensions
+namespace ConsoleTools.KonsoleFileLogger
 {
-
-    public static ILoggingBuilder AddKonsoleFile(this ILoggingBuilder builder)
+    //todo delete? not really working in async context
+    public static class KonsoleFileLoggerExtensions
     {
-        builder.Services.AddOptions<KonsoleFileLoggerConfig>()
-            .BindConfiguration(nameof(KonsoleFileLoggerConfig))
-            .ValidateDataAnnotations();
-        builder.Services.AddSingleton<KonsoleFileLoggerFilePathProvider>();
-        
-        builder.Services.AddSingleton<KonsoleFileLoggerProvider>();
-        //for some reason simply registering logger provider as singleton it not enough so we have to force it to be created and added to AddProviders:
-        builder.AddProvider(builder.Services.BuildServiceProvider().GetRequiredService<KonsoleFileLoggerProvider>());
 
-        return builder;
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogDebugX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogDebug(GetformattedMessage(message, callerName));
+        }
+
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogInformationX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogInformation(GetformattedMessage(message, callerName));
+        }
+
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogCriticalX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogCritical(GetformattedMessage(message, callerName));
+        }
+
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogWarningX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogWarning(GetformattedMessage(message, callerName));
+        }
+
+
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogTraceX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogTrace(GetformattedMessage(message, callerName));
+        }
+
+
+        /// <summary>
+        /// Adds caller class and method names to the log message
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="callerName"></param>
+        public static void LogErrorX(this ILogger logger, string message, [CallerMemberName] string callerName = "")
+        {
+            logger.LogError(GetformattedMessage(message, callerName));
+        }
+
+        private static string GetformattedMessage(string message, string methodName)
+        {
+            var stackTrace = new StackTrace();
+            var callerFrame = stackTrace.GetFrame(2);
+
+            var className = callerFrame?.GetMethod()?.DeclaringType?.Name;
+            if (!string.IsNullOrWhiteSpace(className)) className += "♦r.♦c";
+            return $"♦c{className}{methodName}♦r:♦w {message}";
+        }
     }
 }

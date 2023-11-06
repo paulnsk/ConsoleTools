@@ -38,6 +38,7 @@ namespace ConsoleToolsWorkerserviceTest
             var builder = Host.CreateApplicationBuilder();
 
             builder.Services.AddHostedService<Worker>();
+            builder.Services.AddTransient<MyClass>();
 
             
             builder.Logging.ClearProviders();
@@ -81,9 +82,39 @@ namespace ConsoleToolsWorkerserviceTest
             var baseCategorySubdirLogger = loggerFactory.CreateLogger("BaseCategory\\Subdir\\Xyz");
             baseCategorySubdirLogger.LogCritical($"This is {nameof(baseCategorySubdirLogger)}");
 
+            var myClass = host.Services.GetRequiredService<MyClass>();
+            myClass.MyMethod("testing123");
+
+
             Konsole.PressAnyKey("♦gLogger has logged♦r.♦g Check console anf file output. Press 'Any' key to launch background worker and make it do more logging...");
 
             host.Run();
+        }
+    }
+
+    public class MyClass
+    {
+        private readonly ILogger<MyClass> _logger;
+
+        public MyClass(ILogger<MyClass> logger)
+        {
+            _logger = logger;
+        }
+
+        public void  MyMethod(string s)
+        {
+            _logger.LogTraceX($"This is a {nameof(KonsoleFileLoggerExtensions.LogTraceX)}, {s}");
+            //await Task.Delay(1000);
+            _logger.LogDebugX($"This is a {nameof(KonsoleFileLoggerExtensions.LogDebugX)}, {s}");
+            //await Task.Delay(1000);
+            _logger.LogInformationX($"This is a {nameof(KonsoleFileLoggerExtensions.LogInformationX)}, {s}");
+            //await Task.Delay(1000);
+            _logger.LogCriticalX($"This is a {nameof(KonsoleFileLoggerExtensions.LogCriticalX)}, {s}");
+            //await Task.Delay(1000);
+            _logger.LogWarningX($"This is a {nameof(KonsoleFileLoggerExtensions.LogWarningX)}, {s}");
+            //await Task.Delay(1000);
+            _logger.LogErrorX($"This is a {nameof(KonsoleFileLoggerExtensions.LogErrorX)}, {s}");
+            //await Task.Delay(1000);
         }
     }
 }
