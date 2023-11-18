@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConsoleTools;
-using Kl = ConsoleTools.KonsoleLogger;
 
-namespace ConsoleToolsTest
+namespace ConsoleToolsSamples
 {
     public static class Program
     {
@@ -45,6 +43,26 @@ namespace ConsoleToolsTest
                     },
                     new()
                     {
+                        Title = "Print object as json", Action = () =>
+                        {
+                            var person = new Person
+                            {
+                                Age = 42, Name = "Ben Dover", Details = new PersonDetails
+                                {
+                                    Height = 123,
+                                    Description = "undescribed",
+                                    DetailedDetails = new DetailedDetails { DetailOne = "Information123", DetailTwo = 123 }
+                                }
+                            };
+
+                            Konsole.PrintObject(person);
+                            
+                            Konsole.PressAnyKey();
+                            return Task.CompletedTask;
+                        }
+                    },
+                    new()
+                    {
                         Title = $"Write to {nameof(KonsoleLogger)}", Action = () =>
                         {
                             Konsole.WriteLine();
@@ -59,7 +77,7 @@ namespace ConsoleToolsTest
             };
 
 
-            if (!Konsole.Confirmed("Are you sure?")) return;
+            if (!Konsole.Confirmed("Are you sure you want to ♦gsee♦= the ♦rsamples♦=?")) return;
 
             await menu.Loop();
 
@@ -77,7 +95,7 @@ namespace ConsoleToolsTest
     class PersonDetails
     {
         public int Height { get; set; }
-        public string SchoolName { get; set; }
+        public string Description { get; set; }
         public DetailedDetails DetailedDetails { get; set; }
     }
 

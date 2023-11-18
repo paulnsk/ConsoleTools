@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -18,8 +19,8 @@ namespace ConsoleTools
     {
 
         public const string EscapeChar = "♦"; //Type Alt+4; 
-
-        public static readonly Dictionary<char, ConsoleColor> KolorKodes = new Dictionary<char, ConsoleColor>
+        
+        public static Dictionary<char, ConsoleColor> KolorKodes { get; } = new()
         {
             ['k'] = ConsoleColor.Black,
             ['B'] = ConsoleColor.DarkBlue,
@@ -41,7 +42,7 @@ namespace ConsoleTools
 
 
 
-        private static readonly object KlLock = new object();
+        private static readonly object KlLock = new();
 
         public static void Write(string s, ConsoleColor kolor = ConsoleColor.White)
         {
@@ -96,7 +97,7 @@ namespace ConsoleTools
 
 
         public static bool CrashOnEscapeKey { get; set; } = false;
-        public static string AnyKeyMessage { get; set; } = "Press 'Any' key to continue";
+        public static string AnyKeyMessage { get; set; } = "Press ♦r'♦gAny♦r'♦= key to continue";
         public static ConsoleColor ConfirmColor { get; set; } = ConsoleColor.Blue;
 
 
@@ -189,6 +190,12 @@ namespace ConsoleTools
             WriteLine(SyntaxHighlightJson(json));
         }
 
+        //_todo make it writeline overload? change writeline to accept objects along with strings?
+        public static void PrintObject(object o)
+        {
+            var json = JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true });
+            WriteLine(SyntaxHighlightJson(json));
+        }
 
         //http://joelabrahamsson.com/syntax-highlighting-json-with-c/. Fuck knows how this works.
         public static string SyntaxHighlightJson(string json)
