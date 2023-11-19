@@ -9,7 +9,9 @@ namespace ConsoleTools
         public string Title { get; set; } = "Menu Item";
 
         public bool ItemBreaksMenuLoop { get; set; } = false;
-        
+        public bool? PressAnyKeyAfterAction { get; set; }
+        public bool? WriteLineBeforeAction { get; set; }
+
         public Func<Task> Action { get; set; } = async () =>
         {
             await Task.Run(() =>
@@ -20,6 +22,5 @@ namespace ConsoleTools
         };
 
         public ConsoleColor Color { get; set; } = ConsoleColor.White;
-
     }
 }

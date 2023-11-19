@@ -17,6 +17,8 @@ namespace ConsoleTools
             _title = title;
         }
 
+        public bool PressAnyKeyAfterAction { get; set; } = false;
+        public bool WriteLineBeforeAction { get; set; } = true;
         public Action BeforeDisplay { get; set; } = null;
 
         public List<MenuItem> Items;
@@ -109,7 +111,11 @@ namespace ConsoleTools
                 {
                     try
                     {
+                        var writeLine = Items[itemNumber].WriteLineBeforeAction ?? WriteLineBeforeAction;
+                        if (writeLine) Console.WriteLine();
                         await Items[itemNumber].Action();
+                        var pressAnyKey = Items[itemNumber].PressAnyKeyAfterAction ?? PressAnyKeyAfterAction;
+                        if (pressAnyKey) Konsole.PressAnyKey();
                     }
                     catch (Exception e)
                     {
