@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,7 +21,9 @@ namespace ConsoleTools
 
         public const string EscapeChar = "♦"; //Type Alt+4; 
         
-        public static Dictionary<char, ConsoleColor> KolorKodes { get; } = new()
+        //todo добавить p=previous
+        //todo добавить бэкграунд (как)
+        private static Dictionary<char, ConsoleColor> KolorKodes { get; } = new()
         {
             ['k'] = ConsoleColor.Black,
             ['B'] = ConsoleColor.DarkBlue,
@@ -195,6 +198,17 @@ namespace ConsoleTools
         {
             var json = JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true });
             WriteLine(SyntaxHighlightJson(json));
+        }
+        
+        public static void PrintObjectNamed(object o, string? name = default)
+        {
+            if(string.IsNullOrEmpty(name)) name = o.GetType().Name;
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            var dic = new Dictionary<string, object>
+            {
+                [name] = o
+            };
+            PrintObject(dic);
         }
 
         //http://joelabrahamsson.com/syntax-highlighting-json-with-c/. Fuck knows how this works.
