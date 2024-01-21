@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.888</Version>
+    <Version>0.0.900</Version>
       <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Paulnsk</Authors>
     <Description>A collection of console utils: colored WriteLine, menu, string editor and logger</Description>
