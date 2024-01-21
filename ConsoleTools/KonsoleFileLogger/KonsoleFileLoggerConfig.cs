@@ -25,6 +25,11 @@ namespace ConsoleTools.KonsoleFileLogger
         public List<string> SuppressedCategories { get; set; } = new();
         
         public List<CategoryOverrides> CategoryOverrides { get; set; } = new();
+        
+        /// <summary>
+        /// Disables using an actual file for logging; only console output is used
+        /// </summary>
+        public bool DisableFile { get; set; }
     }
 
     public class CategoryOverrides

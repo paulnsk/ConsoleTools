@@ -13,14 +13,13 @@ namespace ConsoleTools.KonsoleFileLogger
     {
         private readonly string _categoryName;
         private readonly string _filePath;
-
-        public List<string> SuppressedCategories { get; set; } = new();
-
-        public KonsoleFileLogger(string categoryName, string filePath, List<string> suppressedCategories = default)
+        private readonly KonsoleFileLoggerConfig _config;
+        
+        public KonsoleFileLogger(string categoryName, string filePath, KonsoleFileLoggerConfig config)
         {
             _categoryName = categoryName;
             _filePath = filePath;
-            SuppressedCategories = suppressedCategories;
+            _config = config;
         }
 
 
@@ -56,7 +55,7 @@ namespace ConsoleTools.KonsoleFileLogger
                 return;
             }
 
-            if (SuppressedCategories?.Contains(_categoryName) == true) return;
+            if (_config.SuppressedCategories?.Contains(_categoryName) == true) return;
 
             var message = formatter(state, exception);
             if (string.IsNullOrEmpty(message))
@@ -69,7 +68,7 @@ namespace ConsoleTools.KonsoleFileLogger
             lock (WriteLock)
             {
                 Konsole.WriteLine(message);
-                File.AppendAllText(_filePath, Konsole.UnEscape(message) + Environment.NewLine);
+                if (!_config.DisableFile) File.AppendAllText(_filePath, Konsole.UnEscape(message) + Environment.NewLine);
             }
 
         }

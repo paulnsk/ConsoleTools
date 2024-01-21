@@ -20,7 +20,7 @@ internal class KonsoleFileLoggerProvider : ILoggerProvider
     {
         var filePath = _filePathProvider.GetFilePath(categoryName);
         Utils.EnsureDir(filePath);
-        return new KonsoleFileLogger(categoryName, filePath, _config.SuppressedCategories);
+        return new KonsoleFileLogger(categoryName, filePath, _config);
     }
 
     public void Dispose()

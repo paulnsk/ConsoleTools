@@ -17,25 +17,22 @@ namespace ConsoleTools
             _title = title;
         }
 
-        public bool PressAnyKeyAfterAction { get; set; } = false;
+        public bool PressAnyKeyAfterAction { get; set; }
         public bool WriteLineBeforeAction { get; set; } = true;
-        public Action BeforeDisplay { get; set; } = null;
+        public Action? BeforeDisplay { get; set; }
 
         public List<MenuItem> Items;
 
         public ConsoleColor HotkeyColor { get; set; } = ConsoleColor.DarkYellow;
         public ConsoleColor PromptColor { get; set; } = ConsoleColor.Cyan;
-
-        public delegate void DefaultExceptionHandlerAction(Exception exception, MenuItem menuItem);
-
-        public DefaultExceptionHandlerAction DefaultExceptionHandler { get; set; } = (e, mi) =>
+                
+        public Action<Exception, MenuItem>  DefaultExceptionHandler { get; set; } = (e, mi) =>
         {
             Konsole.WriteLine();
             Konsole.WriteLine();
             Konsole.WriteLine($"♦RERROR ♦wexecuting command [♦b{mi.Title}♦w]:\n♦w{e.ToStringWithInners()}");
             Konsole.WriteLine();
             Konsole.WriteLine();
-            Konsole.PressAnyKey();
         };
 
         public bool DefaultExceptionHandlerEnabled { get; set; } = true;
@@ -47,13 +44,13 @@ namespace ConsoleTools
             Console.Clear();
 
             BeforeDisplay?.Invoke();
-            
+
             //if (Items.Count > 9) Konsole.WriteLine("Too many menu items!!", ConsoleColor.Red);
-            
+
             Konsole.WriteLine(_title, HotkeyColor);
-            foreach (var unused in _title) { Konsole.Write("`",HotkeyColor); }
+            foreach (var unused in _title) { Konsole.Write("`", HotkeyColor); }
             Console.WriteLine();
-            
+
             for (var i = 0; i < Items.Count; i++)
             {
                 Konsole.Write(NumberToHotChar(i + 1) + " ", HotkeyColor);
@@ -74,7 +71,7 @@ namespace ConsoleTools
         private string NumberToHotChar(int number)
         {
             if (number < 10) return number.ToString();
-            return ((char) (number + 87)).ToString();
+            return ((char)(number + 87)).ToString();
         }
 
 
@@ -94,39 +91,39 @@ namespace ConsoleTools
 
         public async Task Loop()
         {
-            
+
             while (true)
             {
-                
+
                 Display();
                 Konsole.Write(PressNumberMessage, PromptColor);
 
                 var k = Console.ReadKey();
-                if(k.KeyChar==(char)27 || k.KeyChar.ToString().ToLower() == "q") break;
+                if (k.KeyChar == (char)27 || k.KeyChar.ToString().ToLower() == "q") break;
 
                 var itemNumber = HotCharToNumber(k.KeyChar) - 1;
                 //var itemNumber = k.KeyChar.ToString().ToInt() - 1;
-                
+
                 if (itemNumber >= 0 && itemNumber < Items.Count)
                 {
+                    var writeLine = Items[itemNumber].WriteLineBeforeAction ?? WriteLineBeforeAction;
+                    if (writeLine) Console.WriteLine();
                     try
                     {
-                        var writeLine = Items[itemNumber].WriteLineBeforeAction ?? WriteLineBeforeAction;
-                        if (writeLine) Console.WriteLine();
                         await Items[itemNumber].Action();
-                        var pressAnyKey = Items[itemNumber].PressAnyKeyAfterAction ?? PressAnyKeyAfterAction;
-                        if (pressAnyKey) Konsole.PressAnyKey();
                     }
                     catch (Exception e)
                     {
                         if (DefaultExceptionHandlerEnabled) DefaultExceptionHandler(e, Items[itemNumber]);
                         else throw;
                     }
-                    
+                    var pressAnyKey = Items[itemNumber].PressAnyKeyAfterAction ?? PressAnyKeyAfterAction;
+                    if (pressAnyKey) Konsole.PressAnyKey();
+
                     if (Items[itemNumber].ItemBreaksMenuLoop) break;
                 }
             }
-            
+
         }
     }
 }

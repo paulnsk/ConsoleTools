@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
-
-
 
 namespace ConsoleTools
 {
@@ -51,33 +51,38 @@ namespace ConsoleTools
         {
             lock (KlLock)
             {
-
-                void WritePiece(string s1, ConsoleColor kolor1)
+                foreach (var element in s.ToElements(breakOnEol: false, defaultColor: kolor))
                 {
-                    Console.ForegroundColor = kolor1;
-                    Console.Write(s1);
+                    Console.ForegroundColor = element.Kolor;
+                    Console.Write(element.Text);
                 }
 
-                if (!string.IsNullOrWhiteSpace(EscapeChar) && s.Contains(EscapeChar))
-                {
-                    var pieces = s.Split(new[] { EscapeChar }, StringSplitOptions.RemoveEmptyEntries);
-                    bool firstPiece = true;
-                    foreach (var piece in pieces)
-                    {
-                        var p = piece;
-                        if (firstPiece && !s.StartsWith(EscapeChar)) p = "_" + piece;
-                        firstPiece = false;
-                        var kolorKode = p[0];
-                        WritePiece(p.Remove(0, 1), KolorKodes.TryGetValue(kolorKode, out var pieceKolor) ? pieceKolor : kolor);
-                    }
-                }
-                else WritePiece(s, kolor);
+                //void WritePiece(string s1, ConsoleColor kolor1)
+                //{
+                //    Console.ForegroundColor = kolor1;
+                //    Console.Write(s1);
+                //}
 
-                Console.ResetColor();
+                //if (!string.IsNullOrWhiteSpace(EscapeChar) && s.Contains(EscapeChar))
+                //{
+                //    var pieces = s.Split(new[] { EscapeChar }, StringSplitOptions.RemoveEmptyEntries);
+                //    bool firstPiece = true;
+                //    foreach (var piece in pieces)
+                //    {
+                //        var p = piece;
+                //        if (firstPiece && !s.StartsWith(EscapeChar)) p = "_" + piece;
+                //        firstPiece = false;
+                //        var kolorKode = p[0];
+                //        WritePiece(p.Remove(0, 1), KolorKodes.TryGetValue(kolorKode, out var pieceKolor) ? pieceKolor : kolor);
+                //    }
+                //}
+                //else WritePiece(s, kolor);
+
+                //Console.ResetColor();
             }
         }
 
-        private static int CleanLength(string escapedString)
+        public static int CleanLength(string escapedString)
         {
             var escapeCount = escapedString.Count(x => x.ToString() == EscapeChar);
             return escapedString.Length - escapeCount * 2;
@@ -92,6 +97,7 @@ namespace ConsoleTools
             }
             WriteLine();
         }
+
 
         public static void WriteLine(string s = "", ConsoleColor kolor = ConsoleColor.White)
         {
@@ -194,12 +200,30 @@ namespace ConsoleTools
         }
 
         //_todo make it writeline overload? change writeline to accept objects along with strings?
-        public static void PrintObject(object o)
+        public static void PrintObject(object? o)
         {
-            var json = JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true });
-            WriteLine(SyntaxHighlightJson(json));
+            //if (o == null) WriteLine("♦rNULL");
+            //var json = JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true });
+            WriteLine(SyntaxHighlightJson(ToSyntaxHighlightedJsonJson(o)));
         }
-        
+
+        public static string ToJson(object? o)
+        {
+            if (o == null) return ("NULL");
+            return ToJsonNotNull(o);
+        }
+
+        public static string ToSyntaxHighlightedJsonJson(object? o)
+        {
+            if (o == null) return ("♦rNULL");
+            return SyntaxHighlightJson(ToJsonNotNull(o));
+        }
+
+        private static string ToJsonNotNull(object o)
+        {
+            return JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+        }
+
         public static void PrintObjectNamed(object o, string? name = default)
         {
             if(string.IsNullOrEmpty(name)) name = o.GetType().Name;
@@ -247,6 +271,56 @@ namespace ConsoleTools
                     //return "<span class=\"" + cls + "\">" + match + "</span>";
                     return cls + match + "♦w";
                 });
+        }
+
+        public static IEnumerable<KoloredTextElement> ToElements(this string s, bool breakOnEol = false, ConsoleColor defaultColor = ConsoleColor.White)
+        {
+            if (!string.IsNullOrWhiteSpace(EscapeChar) && s.Contains(EscapeChar))
+            {
+                //var splitOn = breakOnEol ? new[] { EscapeChar, "\n" } : new[] { EscapeChar };
+                var pieces = s.Split(new[] { EscapeChar }, StringSplitOptions.RemoveEmptyEntries);
+                var firstPiece = true;
+                foreach (var piece in pieces)
+                {
+                    var p = piece;
+                    if (firstPiece && !s.StartsWith(EscapeChar)) p = "_" + piece;
+                    firstPiece = false;
+                    var kolorKode = p[0];
+
+                    var text = p.Remove(0, 1);
+                    var kolor = KolorKodes.TryGetValue(kolorKode, out var pieceKolor) ? pieceKolor : defaultColor;
+
+                    if (!breakOnEol) yield return new KoloredTextElement
+                    {
+                        Text = text,
+                        Kolor = kolor
+                    };
+                    else
+                    {
+                        var lines = text.Split('\n');
+                        for (var i = 0; i < lines.Length; i++)
+                        {
+                            yield return new KoloredTextElement
+                            {
+                                Text = lines[i],
+                                Kolor = kolor
+                            };
+                            if (i < lines.Length - 1)
+                                yield return new KoloredTextElement()
+                                {
+                                    Text = "\n",
+                                    Kolor = kolor
+                                };
+                        }
+                    }
+                }
+            }
+            else
+                yield return new KoloredTextElement
+                {
+                    Text = s,
+                    Kolor = defaultColor
+                };
         }
 
     }
