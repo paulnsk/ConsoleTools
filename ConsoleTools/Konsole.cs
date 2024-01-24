@@ -196,33 +196,15 @@ namespace ConsoleTools
 
         public static void PrintJson(string json)
         {
-            WriteLine(SyntaxHighlightJson(json));
+            WriteLine(json.ToSyntaxHighlightedJson());
         }
 
         //_todo make it writeline overload? change writeline to accept objects along with strings?
         public static void PrintObject(object? o)
         {
-            //if (o == null) WriteLine("♦rNULL");
-            //var json = JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true });
-            WriteLine(SyntaxHighlightJson(ToSyntaxHighlightedJsonJson(o)));
+            WriteLine(o.ToSyntaxHighlightedJson());
         }
 
-        public static string ToJson(object? o)
-        {
-            if (o == null) return ("NULL");
-            return ToJsonNotNull(o);
-        }
-
-        public static string ToSyntaxHighlightedJsonJson(object? o)
-        {
-            if (o == null) return ("♦rNULL");
-            return SyntaxHighlightJson(ToJsonNotNull(o));
-        }
-
-        private static string ToJsonNotNull(object o)
-        {
-            return JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-        }
 
         public static void PrintObjectNamed(object o, string? name = default)
         {
@@ -235,43 +217,6 @@ namespace ConsoleTools
             PrintObject(dic);
         }
 
-        //http://joelabrahamsson.com/syntax-highlighting-json-with-c/. Fuck knows how this works.
-        public static string SyntaxHighlightJson(string json)
-        {
-            return Regex.Replace(
-                json,
-                @"(¤(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\¤])*¤(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)".Replace('¤', '"'),
-                match =>
-                {
-                    var cls = "♦b";
-                    //var cls = "number";
-                    if (Regex.IsMatch(match.Value, @"^¤".Replace('¤', '"')))
-                    {
-                        if (Regex.IsMatch(match.Value, ":$"))
-                        {
-                            cls = "♦Y";
-                            //cls = "key";
-                        }
-                        else
-                        {
-                            cls = "♦g";
-                            //cls = "string";
-                        }
-                    }
-                    else if (Regex.IsMatch(match.Value, "true|false"))
-                    {
-                        cls = "♦c";
-                        //cls = "boolean";
-                    }
-                    else if (Regex.IsMatch(match.Value, "null"))
-                    {
-                        cls = "♦m";
-                        //cls = "null";
-                    }
-                    //return "<span class=\"" + cls + "\">" + match + "</span>";
-                    return cls + match + "♦w";
-                });
-        }
 
         public static IEnumerable<KoloredTextElement> ToElements(this string s, bool breakOnEol = false, ConsoleColor defaultColor = ConsoleColor.White)
         {
