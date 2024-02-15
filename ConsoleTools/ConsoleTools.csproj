@@ -7,7 +7,7 @@
     <Authors>Paulnsk</Authors>
     <Description>A collection of console utils: colored WriteLine, menu, string editor and logger</Description>
     <Copyright>Paulnsk</Copyright>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU;x64;x86</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/paulnsk/ConsoleTools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/paulnsk/ConsoleTools</RepositoryUrl>
