@@ -27,7 +27,7 @@ namespace ConsoleToolsSamples
                                 return;
                             }
 
-                            Konsole.PressAnyKey($"You entered [{s}]");
+                            Konsole.PressAnyKey($"You entered [{s}]", false);
                         }
                     },
                     new()
@@ -67,7 +67,7 @@ namespace ConsoleToolsSamples
                         {
                             Konsole.WriteLine();
                             KonsoleLogger.Log("This is a ♦gcolored message ♦wwhich will appear in " + KonsoleLogger.FilePath + " without escape chars");
-                            Konsole.PressAnyKey();
+                            Konsole.PressAnyKey("Натисніть ♣gбудь♣r-♣bяку♣= кнопку♦Y...");
                             return Task.CompletedTask;
                         }
 
@@ -78,6 +78,9 @@ namespace ConsoleToolsSamples
 
 
             if (!Konsole.Confirmed("Are you sure you want to ♦gsee♦= the ♦rsamples♦=?")) return;
+            Konsole.PressAnyKey();
+            Konsole.PressAnyKeyTo("enter");
+            Konsole.PressAnyKey("Press it again♣y...");
 
             await menu.Loop();
 
