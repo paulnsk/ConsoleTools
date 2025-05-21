@@ -21,7 +21,7 @@ namespace ConsoleTools
         public bool WriteLineBeforeAction { get; set; } = true;
         public Action? BeforeDisplay { get; set; }
 
-        public List<MenuItem> Items;
+        public List<MenuItem> Items = [];
 
         public ConsoleColor HotkeyColor { get; set; } = ConsoleColor.DarkYellow;
         public ConsoleColor PromptColor { get; set; } = ConsoleColor.Cyan;

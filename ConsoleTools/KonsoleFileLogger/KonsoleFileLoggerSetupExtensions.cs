@@ -20,11 +20,8 @@ public static class KonsoleFileLoggerSetupExtensions
 
         builder.Services.AddSingleton<KonsoleFileLoggerFilePathProvider>();
         
-        builder.Services.AddSingleton<KonsoleFileLoggerProvider>();
-        //for some reason simply registering logger provider as singleton it not enough so we have to force it to be created and added to AddProviders:
+        builder.Services.AddSingleton<ILoggerProvider, KonsoleFileLoggerProvider>();
 
-        builder.AddProvider(builder.Services.BuildServiceProvider().GetRequiredService<KonsoleFileLoggerProvider>());
-        
         return builder;
     }
 }

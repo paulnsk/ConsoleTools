@@ -8,14 +8,9 @@ using Microsoft.Extensions.Options;
 namespace ConsoleTools.KonsoleFileLogger;
 
 
-internal class KonsoleFileLoggerFilePathProvider
+internal class KonsoleFileLoggerFilePathProvider(IOptions<KonsoleFileLoggerConfig> options)
 {
-    private readonly KonsoleFileLoggerConfig _config;
-
-    public KonsoleFileLoggerFilePathProvider(IOptions<KonsoleFileLoggerConfig> options)
-    {
-        _config = options.Value;
-    }
+    private readonly KonsoleFileLoggerConfig _config = options.Value;
 
 
     public string GetFilePath(string categoryName)
@@ -28,6 +23,7 @@ internal class KonsoleFileLoggerFilePathProvider
 
     private string GetDir()
     {
+        if (_config.DisableFile) return string.Empty;
         var dir = _config.Dir;
         if (dir.IsBlank()) dir = KonsoleFileLoggerConfigConstants.Default;
         return Path.Combine(dir!.SameText(KonsoleFileLoggerConfigConstants.Default) ? Utils.ExeDir() : _config.Dir!, _config.SubDir ?? "");
@@ -35,6 +31,7 @@ internal class KonsoleFileLoggerFilePathProvider
 
     private string GetFileName(string categoryName)
     {
+        if (_config.DisableFile) return string.Empty;
 
         var fileSpec = _config.FileName;
         var matchingOverride = _config.CategoryOverrides.FirstOrDefault(x => !Utils.IsBlank(x.CategoryNameBase) && categoryName.StartsWith(x.CategoryNameBase!, StringComparison.InvariantCultureIgnoreCase));

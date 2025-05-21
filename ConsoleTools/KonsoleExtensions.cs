@@ -22,7 +22,7 @@ namespace ConsoleTools
 
         public static string ToSyntaxHighlightedJson(this object? o)
         {
-            return ToJsonNotNull(o).ToSyntaxHighlightedJson();
+            return o == null ? "" : ToJsonNotNull(o).ToSyntaxHighlightedJson();
         }
 
 
@@ -35,31 +35,25 @@ namespace ConsoleTools
                 match =>
                 {
                     var cls = "♦b";
-                    //var cls = "number";
                     if (Regex.IsMatch(match.Value, @"^¤".Replace('¤', '"')))
                     {
                         if (Regex.IsMatch(match.Value, ":$"))
                         {
                             cls = "♦Y";
-                            //cls = "key";
                         }
                         else
                         {
                             cls = "♦g";
-                            //cls = "string";
                         }
                     }
                     else if (Regex.IsMatch(match.Value, "true|false"))
                     {
                         cls = "♦c";
-                        //cls = "boolean";
                     }
                     else if (Regex.IsMatch(match.Value, "null"))
                     {
                         cls = "♦m";
-                        //cls = "null";
                     }
-                    //return "<span class=\"" + cls + "\">" + match + "</span>";
                     return cls + match + "♦w";
                 });
         }

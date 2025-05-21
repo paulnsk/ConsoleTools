@@ -19,7 +19,7 @@ internal class KonsoleFileLoggerProvider : ILoggerProvider
     public ILogger CreateLogger(string categoryName)
     {
         var filePath = _filePathProvider.GetFilePath(categoryName);
-        Utils.EnsureDir(filePath);
+        if (!_config.DisableFile) Utils.EnsureDir(filePath);
         return new KonsoleFileLogger(categoryName, filePath, _config);
     }
 

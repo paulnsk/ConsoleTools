@@ -130,7 +130,7 @@ namespace ConsoleTools
         }
 
         private int _pos;
-        private string _value;
+        private string _value = string.Empty;
         private int _savedX = Console.CursorLeft;
         private int _savedY = Console.CursorTop;
 

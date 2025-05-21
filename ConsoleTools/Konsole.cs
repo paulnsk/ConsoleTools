@@ -40,14 +40,26 @@ public static class Konsole
 
     private static readonly object KlLock = new();
 
+    public static event EventHandler<KoloredTextElement>? PrintElement;
+
     public static void Write(string s, ConsoleColor kolor = ConsoleColor.White)
     {
         lock (KlLock)
         {
             foreach (var element in s.ToElements(breakOnEol: false, defaultColor: kolor))
             {
-                Console.ForegroundColor = element.Kolor;
+                try
+                {
+                    //not supported on this platform error in avalonia wasm
+                    Console.ForegroundColor = element.Kolor;
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
                 Console.Write(element.Text);
+                PrintElement?.Invoke(null, element);
             }
 
             if (_printToHtml)
