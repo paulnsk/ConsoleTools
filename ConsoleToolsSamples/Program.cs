@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTools;
 
@@ -8,13 +10,14 @@ namespace ConsoleToolsSamples
     {
         private static async Task Main(string[] args)
         {
-            
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             Konsole.CrashOnEscapeKey = false;
 
             var menu = new Menu("Main")
             {
-                Items = new List<MenuItem>()
-                {
+                Items =
+                [
                     new()
                     {
                         Title = "String editor example",
@@ -30,6 +33,7 @@ namespace ConsoleToolsSamples
                             Konsole.PressAnyKey($"You entered [{s}]", false);
                         }
                     },
+
                     new()
                     {
                         Title = "Write color line", Action = () =>
@@ -41,6 +45,7 @@ namespace ConsoleToolsSamples
                         }
 
                     },
+
                     new()
                     {
                         Title = "Print object as json", Action = () =>
@@ -56,11 +61,24 @@ namespace ConsoleToolsSamples
                             };
 
                             Konsole.PrintObject(person);
-                            
+
                             Konsole.PressAnyKey();
                             return Task.CompletedTask;
                         }
                     },
+
+                    new()
+                    {
+                        Title = "Print object as XML", Action = () =>
+                        {
+
+                            XmlHighlighterTester.RunTests();
+
+                            Konsole.PressAnyKey();
+                            return Task.CompletedTask;
+                        }
+                    },
+
                     new()
                     {
                         Title = $"Write to {nameof(KonsoleLogger)}", Action = () =>
@@ -72,8 +90,7 @@ namespace ConsoleToolsSamples
                         }
 
                     }
-
-                }
+                ]
             };
 
 
