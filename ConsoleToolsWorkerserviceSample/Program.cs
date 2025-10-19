@@ -7,7 +7,7 @@ namespace ConsoleToolsWorkerserviceTest
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
 
 
@@ -83,38 +83,47 @@ namespace ConsoleToolsWorkerserviceTest
             baseCategorySubdirLogger.LogCritical($"This is {nameof(baseCategorySubdirLogger)}");
 
             var myClass = host.Services.GetRequiredService<MyClass>();
-            myClass.MyMethod("testing123");
+            await myClass.TestLogX("testing123");
+
+            await myClass.TestScopedLogging();
 
 
             Konsole.PressAnyKey("♦gLogger has logged♦r.♦g Check console anf file output. Press 'Any' key to launch background worker and make it do more logging...");
 
-            host.Run();
+            await host.RunAsync();
         }
     }
 
-    public class MyClass
+    public class MyClass(ILogger<MyClass> logger)
     {
-        private readonly ILogger<MyClass> _logger;
+        private readonly ILogger _scopedOneLogger = new ScopedLogger(logger, new Dictionary<string, object> { ["ScopeParam"] = "Один" });
+        private readonly ILogger _scopedTwoLogger = new ScopedLogger(logger, new Dictionary<string, object> { ["ScopeParam"] = 2, ["ДругойСкопеПарам"]="Другой" });
 
-        public MyClass(ILogger<MyClass> logger)
+        public async Task  TestLogX(string s)
         {
-            _logger = logger;
+            logger.LogTraceX($"This is a {nameof(KonsoleFileLoggerExtensions.LogTraceX)}, {s}");
+            await Task.Delay(100);
+            logger.LogDebugX($"This is a {nameof(KonsoleFileLoggerExtensions.LogDebugX)}, {s}");
+            await Task.Delay(100);
+            logger.LogInformationX($"This is a {nameof(KonsoleFileLoggerExtensions.LogInformationX)}, {s}");
+            await Task.Delay(100);
+            logger.LogCriticalX($"This is a {nameof(KonsoleFileLoggerExtensions.LogCriticalX)}, {s}");
+            await Task.Delay(100);
+            logger.LogWarningX($"This is a {nameof(KonsoleFileLoggerExtensions.LogWarningX)}, {s}");
+            await Task.Delay(100);
+            logger.LogErrorX($"This is a {nameof(KonsoleFileLoggerExtensions.LogErrorX)}, {s}");
+            await Task.Delay(100);
         }
 
-        public void  MyMethod(string s)
+        public async Task TestScopedLogging()
         {
-            _logger.LogTraceX($"This is a {nameof(KonsoleFileLoggerExtensions.LogTraceX)}, {s}");
-            //await Task.Delay(1000);
-            _logger.LogDebugX($"This is a {nameof(KonsoleFileLoggerExtensions.LogDebugX)}, {s}");
-            //await Task.Delay(1000);
-            _logger.LogInformationX($"This is a {nameof(KonsoleFileLoggerExtensions.LogInformationX)}, {s}");
-            //await Task.Delay(1000);
-            _logger.LogCriticalX($"This is a {nameof(KonsoleFileLoggerExtensions.LogCriticalX)}, {s}");
-            //await Task.Delay(1000);
-            _logger.LogWarningX($"This is a {nameof(KonsoleFileLoggerExtensions.LogWarningX)}, {s}");
-            //await Task.Delay(1000);
-            _logger.LogErrorX($"This is a {nameof(KonsoleFileLoggerExtensions.LogErrorX)}, {s}");
-            //await Task.Delay(1000);
+            _scopedOneLogger.LogInformationX("This is a log from scoped logger ONE");
+            await Task.Delay(100);
+            _scopedTwoLogger.LogInformationX("This is a log from scoped logger TWO");
+            await Task.Delay(100);
+            _scopedOneLogger.LogInformationX("This is a log from scoped logger ONE AGAIN!");
+            await Task.Delay(100);
         }
+
     }
 }

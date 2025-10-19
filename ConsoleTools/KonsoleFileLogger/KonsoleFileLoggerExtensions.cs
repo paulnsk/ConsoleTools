@@ -7,12 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ConsoleTools.KonsoleFileLogger
 {
-    //todo delete? not really working in async context
     public static class KonsoleFileLoggerExtensions
     {
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>
@@ -23,7 +22,7 @@ namespace ConsoleTools.KonsoleFileLogger
         }
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>
@@ -34,7 +33,7 @@ namespace ConsoleTools.KonsoleFileLogger
         }
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>
@@ -45,7 +44,7 @@ namespace ConsoleTools.KonsoleFileLogger
         }
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>
@@ -57,7 +56,7 @@ namespace ConsoleTools.KonsoleFileLogger
 
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>
@@ -69,7 +68,7 @@ namespace ConsoleTools.KonsoleFileLogger
 
 
         /// <summary>
-        /// Adds caller class and method names to the log message
+        /// Adds caller class and method names to the log message. Does not work in async context.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="message"></param>

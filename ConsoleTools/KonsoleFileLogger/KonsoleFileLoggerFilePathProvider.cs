@@ -13,8 +13,7 @@ namespace ConsoleTools.KonsoleFileLogger;
 /// a subdirectory, and a file name, which can be overridden for specific category prefixes.
 /// </summary>
 internal class KonsoleFileLoggerFilePathProvider(IOptions<KonsoleFileLoggerConfig> options)
-{
-    // todo clean this up...
+{    
     /*
         Configuration Cheatsheet: How the Log File Path is Determined
         --------------------------------------------------------------
