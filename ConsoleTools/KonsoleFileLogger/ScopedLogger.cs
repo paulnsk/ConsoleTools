@@ -18,3 +18,11 @@ public class ScopedLogger(ILogger underlyingLogger, Dictionary<string, object> s
 
     public IDisposable BeginScope<TState>(TState state) where TState : notnull => underlyingLogger.BeginScope(state);
 }
+
+public static class ScopedLoggerExtensions
+{
+    public static ILogger WithScope(this ILogger logger, Dictionary<string, object> scopeValues)
+    {
+        return new ScopedLogger(logger, scopeValues);
+    }
+}
